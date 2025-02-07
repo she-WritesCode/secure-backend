@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useCartStore, useProductStore } from "../stores";
 import { Button } from "@/components/ui/button";
@@ -14,7 +14,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { useForm } from "vee-validate";
 import { z } from "zod";
+import { useToast } from "@/components/ui/toast/use-toast";
 
+const { toast } = useToast();
 const route = useRoute();
 const router = useRouter();
 const cartStore = useCartStore();
@@ -30,7 +32,7 @@ const formSchema = z.object({
 });
 
 const form = useForm({
-  validationSchema: formSchema,
+  // validationSchema: formSchema,
   initialValues: {
     quantity: 1,
   },
@@ -45,9 +47,15 @@ const addToCart = form.handleSubmit((values) => {
     for (let i = 0; i < values.quantity; i++) {
       cartStore.addToCart(product);
     }
-    router.push("/checkout");
+    toast({
+      title: `${values.quantity} items added to cart`,
+      description: `${product.name} has been added to cart`,
+    });
   }
 });
+const goToCheckout = () => {
+  router.push("/checkout");
+};
 </script>
 
 <template>
@@ -72,7 +80,7 @@ const addToCart = form.handleSubmit((values) => {
           />
         </div>
 
-        <div class="md:w-1/2 p-6">
+        <div class="md:w-1/2 p-0">
           <CardHeader>
             <CardTitle class="text-3xl">{{ product.name }}</CardTitle>
             <CardDescription class="text-2xl font-semibold">
@@ -87,8 +95,7 @@ const addToCart = form.handleSubmit((values) => {
               <label class="font-medium">Quantity:</label>
               <Input
                 type="number"
-                :value="form.values.quantity"
-                @input="form.setValue('quantity', Number($event.target.value))"
+                :modelValue="form.values.quantity"
                 min="1"
                 max="99"
                 class="w-20"
@@ -96,10 +103,19 @@ const addToCart = form.handleSubmit((values) => {
             </div>
           </CardContent>
 
-          <CardFooter class="flex gap-4">
-            <Button @click="addToCart" class="flex-1"> Add to Cart </Button>
-            <Button variant="outline" @click="router.push('/')">
-              Back to Products
+          <CardFooter class="flex flex-col gap-4">
+            <div class="flex gap-4 w-full">
+              <Button @click="addToCart" class="flex-1"> Add to Cart </Button>
+              <Button variant="outline" @click="router.push('/')">
+                Back to Products
+              </Button>
+            </div>
+            <Button
+              v-if="cartStore.items.length"
+              @click="goToCheckout"
+              class="w-full"
+            >
+              Checkout
             </Button>
           </CardFooter>
         </div>

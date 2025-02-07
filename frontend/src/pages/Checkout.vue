@@ -21,7 +21,7 @@ const cartStore = useCartStore();
 const orderStore = useOrderStore();
 const loading = ref(false);
 
-const formSchema = z.object<CheckoutDetails>({
+const formSchema = z.object({
   email: z.string().email("Please enter a valid email"),
   name: z.string().min(2, "Name must be at least 2 characters"),
   address: z.string().min(5, "Please enter your full address"),
@@ -30,8 +30,8 @@ const formSchema = z.object<CheckoutDetails>({
   postalCode: z.string().min(3, "Please enter a valid postal code"),
 });
 
-const form = useForm({
-  validationSchema: formSchema,
+const form = useForm<CheckoutDetails>({
+  // validationSchema: formSchema,
 });
 
 const onSubmit = form.handleSubmit(async (values) => {
