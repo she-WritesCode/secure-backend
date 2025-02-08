@@ -7,7 +7,7 @@ import {
   MinLength,
   IsPhoneNumber,
 } from 'class-validator';
-import { Role } from '../types/role.enum';
+import { Role } from 'src/common/enums/role.enum';
 
 export class CreateUserDto {
   @ApiProperty()

@@ -18,6 +18,7 @@ import {
   ApiResponse,
   ApiBearerAuth,
 } from '@nestjs/swagger';
+import { Roles } from 'src/common/decorators/roles.decorator';
 
 @ApiTags('User')
 @ApiBearerAuth()
@@ -25,6 +26,7 @@ import {
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @Roles('ADMIN')
   @Post()
   @ApiOperation({ summary: 'Create a new user' })
   @ApiResponse({ status: 201, description: 'User successfully created.' })
@@ -33,6 +35,7 @@ export class UserController {
     return this.userService.create(createUserDto);
   }
 
+  @Roles('ADMIN')
   @Get()
   @ApiOperation({ summary: 'Get all users' })
   @ApiResponse({ status: 200, description: 'Return all users.' })
@@ -40,6 +43,7 @@ export class UserController {
     return this.userService.findAll(query);
   }
 
+  @Roles('ADMIN')
   @Get(':id')
   @ApiOperation({ summary: 'Get a user by id' })
   @ApiResponse({ status: 200, description: 'Return the user.' })
@@ -48,6 +52,7 @@ export class UserController {
     return this.userService.findOne(id);
   }
 
+  @Roles('ADMIN')
   @Patch(':id')
   @ApiOperation({ summary: 'Update a user' })
   @ApiResponse({ status: 200, description: 'User successfully updated.' })
@@ -64,6 +69,7 @@ export class UserController {
     return this.userService.findOne(req.user.userId);
   }
 
+  @Roles('ADMIN')
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a user' })
   @ApiResponse({ status: 200, description: 'User successfully deleted.' })
