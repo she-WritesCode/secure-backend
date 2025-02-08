@@ -1,8 +1,9 @@
-import { Controller, Post, Body, UseGuards, Request } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Req } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { IsPublic } from 'src/common/decorators/public.decorator';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Request } from 'express';
 
 @ApiTags('Auth')
 @ApiBearerAuth()
@@ -13,7 +14,7 @@ export class AuthController {
   @IsPublic()
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  async login(@Request() req) {
+  async login(@Req() req: Request) {
     return this.authService.login(req.user);
   }
 

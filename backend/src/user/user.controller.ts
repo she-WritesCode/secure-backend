@@ -39,6 +39,7 @@ export class UserController {
   @Get()
   @ApiOperation({ summary: 'Get all users' })
   @ApiResponse({ status: 200, description: 'Return all users.' })
+  // TODO Unsecure because of no query validation
   findAll(@Query() query: Record<string, any>) {
     return this.userService.findAll(query);
   }

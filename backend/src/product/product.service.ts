@@ -1,26 +1,52 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { ProductRepository } from './product.repository';
 
 @Injectable()
 export class ProductService {
-  create(createProductDto: CreateProductDto) {
-    return 'This action adds a new product';
+  constructor(private readonly productRepository: ProductRepository) {}
+
+  async create(createProductDto: CreateProductDto) {
+    return this.productRepository.create(createProductDto);
   }
 
-  findAll() {
-    return `This action returns all product`;
+  async findAllPublished(query: Record<string, any> = {}) {
+    return this.productRepository.paginate({
+      defaultFilter: { isActive: true },
+      filter: query,
+      sort: { name: 1 },
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} product`;
+  async findAll(query: Record<string, any> = {}) {
+    return this.productRepository.find(query);
   }
 
-  update(id: number, updateProductDto: UpdateProductDto) {
-    return `This action updates a #${id} product`;
+  async findOne(id: string) {
+    const product = await this.productRepository.findOne({ _id: id });
+    if (!product) {
+      throw new NotFoundException(`Product with ID ${id} not found`);
+    }
+    return product;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} product`;
+  async update(id: string, updateProductDto: UpdateProductDto) {
+    const updatedProduct = await this.productRepository.findOneAndUpdate(
+      { _id: id },
+      updateProductDto,
+    );
+    if (!updatedProduct) {
+      throw new NotFoundException(`Product with ID ${id} not found`);
+    }
+    return updatedProduct;
+  }
+
+  async remove(id: string) {
+    const deletedProduct = await this.productRepository.deleteOne({ _id: id });
+    if (!deletedProduct) {
+      throw new NotFoundException(`Product with ID ${id} not found`);
+    }
+    return deletedProduct;
   }
 }
