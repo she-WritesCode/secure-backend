@@ -48,5 +48,12 @@ export const useCartStore = defineStore("cart", () => {
     items.value = [];
   };
 
-  return { items, total, addToCart, removeFromCart, clearCart };
+  const updateQuantity = (productId: string, newQuantity: number) => {
+    const item = items.value.find((item) => item.id === productId);
+    if (item && newQuantity > 0) {
+      item.quantity = newQuantity;
+    }
+  };
+
+  return { items, total, addToCart, removeFromCart, clearCart, updateQuantity };
 });

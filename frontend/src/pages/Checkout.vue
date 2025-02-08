@@ -78,9 +78,16 @@ const onSubmit = form.handleSubmit(async (values) => {
                     Quantity: {{ item.quantity }}
                   </p>
                 </div>
-                <p class="font-medium">
-                  ${{ (item.price * item.quantity).toFixed(2) }}
-                </p>
+                <div>
+                  <p class="font-medium">
+                    ${{ (item.price * item.quantity).toFixed(2) }}
+                  </p>
+                  <Button
+                    @click="cartStore.removeFromCart(item.id)"
+                    variant="secondary"
+                    >x</Button
+                  >
+                </div>
               </div>
               <div class="border-t pt-4 mt-4">
                 <div class="flex justify-between items-center font-bold">

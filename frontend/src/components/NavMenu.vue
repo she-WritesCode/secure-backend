@@ -17,6 +17,11 @@ import {
         </NavigationMenuLink>
       </NavigationMenuItem>
       <NavigationMenuItem>
+        <NavigationMenuLink href="/cart" :class="navigationMenuTriggerStyle()">
+          Cart
+        </NavigationMenuLink>
+      </NavigationMenuItem>
+      <NavigationMenuItem>
         <NavigationMenuLink
           href="/checkout"
           :class="navigationMenuTriggerStyle()"

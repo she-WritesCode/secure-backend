@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
 import { useProductStore } from "../stores";
-import { Button } from "@/components/ui/button";
+import { Button } from "../components/ui/button";
 import {
   Card,
   CardHeader,
@@ -9,8 +9,8 @@ import {
   CardDescription,
   CardContent,
   CardFooter,
-} from "@/components/ui/card";
-import { Pagination } from "@/components/ui/pagination/";
+} from "../components/ui/card";
+import { Pagination } from "../components/ui/pagination";
 
 const productStore = useProductStore();
 const { products, loading, currentPage, totalPages } = productStore;
