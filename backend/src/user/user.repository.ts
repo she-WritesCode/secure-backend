@@ -20,4 +20,8 @@ export class UserRepository extends AbstractRepository<
   ) {
     super(model, connection);
   }
+
+  protected searchableFields: (keyof User)[] = ['name', 'email', 'phoneNumber'];
+  protected excludedFields: string[] = [];
+  protected populateOnFind: string[] = [];
 }

@@ -1,4 +1,4 @@
-import { Prop } from '@nestjs/mongoose';
+import { Prop, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { AbstractDocument } from 'src/common/database/abstract.schema';
 import { Role } from '../types/role.enum';
@@ -26,16 +26,7 @@ export class User extends AbstractDocument {
   @ApiProperty()
   @Prop({ required: true, enum: Role, default: Role.CUSTOMER })
   role: Role;
-
-  @ApiProperty()
-  @Prop({ required: false })
-  address: string;
-
-  @ApiProperty()
-  @Prop({ required: false })
-  city: string;
-
-  @ApiProperty()
-  @Prop({ required: false })
-  country: string;
 }
+
+export const UserSchema = SchemaFactory.createForClass(User);
+UserSchema.index({ email: 1 }, { unique: true });
