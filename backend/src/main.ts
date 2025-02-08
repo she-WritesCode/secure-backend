@@ -10,6 +10,7 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
 
   app.useGlobalGuards(new JwtAuthGuard(new Reflector()));
+  app.enableCors();
 
   const config = new DocumentBuilder()
     .setTitle('Secure Backend API')

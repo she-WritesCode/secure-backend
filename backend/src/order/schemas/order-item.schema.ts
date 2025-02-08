@@ -8,7 +8,7 @@ import { Product } from '../../product/schemas/product.schema';
 export class OrderItem extends AbstractDocument {
   @ApiProperty()
   @Prop({ type: SchemaTypes.ObjectId, ref: 'Product', required: true })
-  product: Product;
+  product: string | Product;
 
   @ApiProperty()
   @Prop({ required: true, min: 1 })
@@ -20,6 +20,6 @@ export class OrderItem extends AbstractDocument {
 
   @ApiProperty()
   @Prop({ required: false })
-  notes: string;
+  notes?: string;
 }
 export const OrderItemSchema = SchemaFactory.createForClass(OrderItem);

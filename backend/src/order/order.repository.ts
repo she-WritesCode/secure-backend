@@ -4,9 +4,10 @@ import { Model, Connection } from 'mongoose';
 import { InjectConnection } from '@nestjs/mongoose';
 import { AbstractRepository } from '../common/database/abstract.repository';
 import { Order } from './schemas/order.schema';
+import { CreateOrderDto } from './dto/create-order.dto';
 
 @Injectable()
-export class OrderRepository extends AbstractRepository<Order> {
+export class OrderRepository extends AbstractRepository<Order, CreateOrderDto> {
   protected readonly logger = new Logger(OrderRepository.name);
 
   constructor(

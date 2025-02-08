@@ -20,8 +20,12 @@ export class User extends AbstractDocument {
   phoneNumber: string;
 
   @ApiProperty()
-  @Prop({ required: true })
+  @Prop({ required: false })
   password: string;
+
+  @ApiProperty()
+  @Prop({ required: true, default: false })
+  isActive: boolean;
 
   @ApiProperty()
   @Prop({ required: true, enum: Role, default: Role.CUSTOMER })

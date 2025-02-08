@@ -17,7 +17,7 @@ export class ShippingAddress extends AbstractDocument {
   addressLine2: string;
 
   @ApiProperty()
-  @Prop({ required: true })
+  @Prop({ required: false })
   city: string;
 
   @ApiProperty()

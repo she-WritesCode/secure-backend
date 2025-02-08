@@ -55,7 +55,7 @@ export class ProductController {
     return this.productService.findAll(query);
   }
 
-  @Roles('ADMIN')
+  @IsPublic()
   @Get(':id')
   @ApiOperation({ summary: 'Get a product by id' })
   @ApiResponse({ status: 200, description: 'Return the product.' })
