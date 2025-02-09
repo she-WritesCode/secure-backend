@@ -48,9 +48,8 @@ onMounted(async () => {
 
 const addToCart = form.handleSubmit((values) => {
   if (product) {
-    for (let i = 0; i < values.quantity; i++) {
-      cartStore.addToCart(product);
-    }
+    cartStore.addToCart(product, values.quantity);
+
     toast({
       title: `${values.quantity} items added to cart`,
       description: `${product.name} has been added to cart`,
@@ -76,7 +75,7 @@ const goToCheckout = () => {
     </div>
 
     <div v-else-if="product" class="max-w-4xl mx-auto">
-      <Card class="flex flex-col md:flex-row gap-8">
+      <Card class="flex flex-col md:flex-row gap-0">
         <div class="md:w-1/2">
           <img
             :src="product.imageUrl"
@@ -100,9 +99,9 @@ const goToCheckout = () => {
               <label class="font-medium">Quantity:</label>
               <Input
                 type="number"
-                :modelValue="form.values.quantity"
+                v-model="form.values.quantity"
                 min="1"
-                max="99"
+                :max="product.quantity"
                 class="w-20"
               />
             </div>

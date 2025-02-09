@@ -293,6 +293,15 @@ export abstract class AbstractRepository<
     };
   }
 
+  /**
+   * Counts the number of documents matching the filter query.
+   * @param filterQuery - Query to filter documents for counting.
+   * @returns {Promise<number>} The count of matching documents.
+   */
+  async count(filterQuery: FilterQuery<TDocument> = {}): Promise<number> {
+    return this.model.countDocuments(filterQuery).exec();
+  }
+
   public getSearchQuery(
     search: string | undefined,
     searchableFields: string[] = [],

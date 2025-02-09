@@ -2,7 +2,8 @@ import { defineStore } from "pinia";
 import { ref, computed, watch } from "vue";
 import type { Product } from "./product";
 
-export interface CartItem extends Product {
+export interface CartItem {
+  product: Product;
   quantity: number;
 }
 
@@ -26,22 +27,24 @@ export const useCartStore = defineStore("cart", () => {
 
   const total = computed(() => {
     return items.value.reduce(
-      (sum, item) => sum + item.price * item.quantity,
+      (sum, item) => sum + item.product.price * item.quantity,
       0
     );
   });
 
-  const addToCart = (product: Product) => {
-    const existingItem = items.value.find((item) => item._id === product._id);
+  const addToCart = (product: Product, quantity: number) => {
+    const existingItem = items.value.find(
+      (item) => item.product._id === product._id
+    );
     if (existingItem) {
-      existingItem.quantity++;
+      existingItem.quantity += quantity;
     } else {
-      items.value.push({ ...product, quantity: 1 });
+      items.value.push({ product, quantity });
     }
   };
 
   const removeFromCart = (productId: string) => {
-    items.value = items.value.filter((item) => item._id !== productId);
+    items.value = items.value.filter((item) => item.product._id !== productId);
   };
 
   const clearCart = () => {
@@ -49,7 +52,7 @@ export const useCartStore = defineStore("cart", () => {
   };
 
   const updateQuantity = (productId: string, newQuantity: number) => {
-    const item = items.value.find((item) => item._id === productId);
+    const item = items.value.find((item) => item.product._id === productId);
     if (item && newQuantity > 0) {
       item.quantity = newQuantity;
     }

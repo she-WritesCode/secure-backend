@@ -1,13 +1,13 @@
 import { defineStore } from "pinia";
 import { computed, ref, shallowRef } from "vue";
-
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+import { BACKEND_URL } from "@/lib/constants";
 
 export interface Product {
   _id: string;
   name: string;
   description: string;
   price: number;
+  quantity: number;
   imageUrl: string;
 }
 

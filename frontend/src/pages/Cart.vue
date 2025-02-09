@@ -50,19 +50,19 @@ const goToCheckout = () => {
           <div class="space-y-4">
             <div
               v-for="item in cartStore.items"
-              :key="item._id"
+              :key="item.product._id"
               class="flex items-center justify-between py-4 border-b last:border-0"
             >
               <div class="flex items-center space-x-4">
                 <img
-                  :src="item.imageUrl"
-                  :alt="item.name"
+                  :src="item.product.imageUrl"
+                  :alt="item.product.name"
                   class="w-16 h-16 object-cover rounded"
                 />
                 <div>
-                  <h3 class="font-medium">{{ item.name }}</h3>
+                  <h3 class="font-medium">{{ item.product.name }}</h3>
                   <p class="text-sm text-gray-500">
-                    ${{ item.price.toFixed(2) }}
+                    ${{ item.product.price.toFixed(2) }}
                   </p>
                 </div>
               </div>
@@ -71,7 +71,7 @@ const goToCheckout = () => {
                   <Button
                     variant="outline"
                     size="icon"
-                    @click="updateQuantity(item._id, item.quantity - 1)"
+                    @click="updateQuantity(item.product._id, item.quantity - 1)"
                   >
                     -
                   </Button>
@@ -81,25 +81,25 @@ const goToCheckout = () => {
                     class="w-16 text-center"
                     min="1"
                     @change="
-                      (e) => updateQuantity(item._id, parseInt(e.target.value))
+                      (e:any) => updateQuantity(item.product._id, parseInt(e.target.value))
                     "
                   />
                   <Button
                     variant="outline"
                     size="icon"
-                    @click="updateQuantity(item._id, item.quantity + 1)"
+                    @click="updateQuantity(item.product._id, item.quantity + 1)"
                   >
                     +
                   </Button>
                 </div>
                 <div class="text-right">
                   <p class="font-medium">
-                    ${{ (item.price * item.quantity).toFixed(2) }}
+                    ${{ (item.product.price * item.quantity).toFixed(2) }}
                   </p>
                   <Button
                     variant="destructive"
                     size="sm"
-                    @click="removeItem(item._id)"
+                    @click="removeItem(item.product._id)"
                   >
                     Remove
                   </Button>

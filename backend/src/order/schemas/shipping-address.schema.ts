@@ -1,6 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import { AbstractDocument } from '../../common/database/abstract.schema';
+import { SchemaTypes } from 'mongoose';
+import { Order } from './order.schema';
 
 @Schema({ timestamps: true })
 export class ShippingAddress extends AbstractDocument {
@@ -29,11 +31,11 @@ export class ShippingAddress extends AbstractDocument {
   country: string;
 
   @ApiProperty()
-  @Prop({ required: true })
+  @Prop({ required: false })
   postalCode: string;
 
   @ApiProperty()
-  @Prop({ required: true })
+  @Prop({ required: false })
   phoneNumber: string;
 
   @ApiProperty()

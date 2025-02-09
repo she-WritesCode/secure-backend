@@ -11,18 +11,14 @@ import { OrderStatus, PaymentStatus } from '../types/status.enum';
 export class Order extends AbstractDocument {
   @ApiProperty()
   @Prop({ type: SchemaTypes.ObjectId, ref: 'User', required: true })
-  user: User;
+  user: string | User;
 
   @ApiProperty()
-  @Prop({
-    type: [{ type: SchemaTypes.ObjectId, ref: 'OrderItem' }],
-    required: true,
-  })
-  items: OrderItem[];
+  items?: OrderItem[];
 
   @ApiProperty()
   @Prop({ type: SchemaTypes.ObjectId, ref: 'ShippingAddress', required: true })
-  shippingAddress: ShippingAddress;
+  shippingAddress: string | ShippingAddress;
 
   @ApiProperty()
   @Prop({ required: true })
@@ -41,7 +37,7 @@ export class Order extends AbstractDocument {
   paymentMethod: string;
 
   @ApiProperty()
-  @Prop({ required: false })
+  @Prop({ required: true })
   trackingNumber: string;
 
   @ApiProperty()
@@ -51,3 +47,9 @@ export class Order extends AbstractDocument {
 
 export const OrderSchema = SchemaFactory.createForClass(Order);
 OrderSchema.index({ trackingNumber: 1 }, { unique: true });
+OrderSchema.virtual('items', {
+  ref: 'OrderItem',
+  localField: '_id',
+  foreignField: 'order',
+  justOne: false,
+});

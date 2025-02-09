@@ -1,4 +1,4 @@
-import { Prop, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { AbstractDocument } from 'src/common/database/abstract.schema';
 import { ApiProperty } from '@nestjs/swagger';
@@ -6,6 +6,7 @@ import { Role } from 'src/common/enums/role.enum';
 
 export type UserDocument = User & Document;
 
+@Schema({ versionKey: false })
 export class User extends AbstractDocument {
   @ApiProperty()
   @Prop()
@@ -16,7 +17,7 @@ export class User extends AbstractDocument {
   email: string;
 
   @ApiProperty()
-  @Prop({ required: true })
+  @Prop({ required: false })
   phoneNumber: string;
 
   @ApiProperty()

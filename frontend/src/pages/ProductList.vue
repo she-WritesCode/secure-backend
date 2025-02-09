@@ -22,7 +22,6 @@ import {
 
 const { products, loading, currentPage, totalPages, fetchProducts } =
   useProductStore();
-// const { products, loading, currentPage, totalPages } = productStore;
 
 onMounted(async () => {
   await fetchProducts();

@@ -30,8 +30,9 @@ export class UserService {
     const [user] = await this.userRepository.findOrCreate(
       { email: dto.email },
       {
-        name: '',
-        ...dto,
+        name: dto.name,
+        phoneNumber: dto.phoneNumber,
+        email: dto.email,
         password: temporaryPassword,
         isActive: false,
         role: Role.CUSTOMER,

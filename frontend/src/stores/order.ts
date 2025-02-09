@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import type { CartItem } from ".";
+import { BACKEND_URL } from "@/lib/constants";
 
 export interface Order {
   id: string;
@@ -10,15 +11,27 @@ export interface Order {
   createdAt: Date;
 }
 
-export interface CheckoutDetails {
+export interface ShippingDetails {
+  fullName: string;
   email: string;
-  name: string;
-  address: string;
+  phoneNumber?: string;
+  addressLine1: string;
+  addressLine2: string;
   city: string;
+  state: string;
   country: string;
   postalCode: string;
+  deliveryInstructions?: string;
 }
 
+export interface CheckoutDetails {
+  items: {
+    product: string;
+    quantity: number;
+  }[];
+  shippingAddress: ShippingDetails;
+  notes?: string;
+}
 export const useOrderStore = defineStore("orders", () => {
   const orders = ref<Order[]>([]);
   const loading = ref(false);
@@ -27,7 +40,7 @@ export const useOrderStore = defineStore("orders", () => {
   const fetchOrders = async () => {
     loading.value = true;
     try {
-      const response = await fetch("/orders");
+      const response = await fetch(`${BACKEND_URL}/orders`);
       const data = await response.json();
       orders.value = data.results;
     } catch (err) {
@@ -39,19 +52,26 @@ export const useOrderStore = defineStore("orders", () => {
 
   const createOrder = async (
     items: CartItem[],
-    formValues: CheckoutDetails
+    formValues: ShippingDetails
   ) => {
     loading.value = true;
     try {
-      const response = await fetch("/orders", {
+      const payload: CheckoutDetails = {
+        items: items.map((i) => ({
+          product: i.product._id,
+          quantity: i.quantity,
+        })),
+        shippingAddress: formValues,
+      };
+      const response = await fetch(`${BACKEND_URL}/orders/checkout`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ items, ...formValues }),
+        body: JSON.stringify(payload),
       });
       const data = await response?.json();
-      orders.value.unshift(data);
+      fetchOrders();
       return data;
     } catch (err) {
       error.value = "Failed to create order";
