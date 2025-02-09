@@ -73,9 +73,13 @@ export class OrderService {
     }
 
     const products = await this.validateProducts(items);
-    const shippingAddress = await this.shippingAddressRepository.create({
-      ...createOrderDto.shippingAddress,
-    });
+    const [shippingAddress] = await this.shippingAddressRepository.findOrCreate(
+      {
+        email: createOrderDto.shippingAddress.email,
+        addressLine1: createOrderDto.shippingAddress.addressLine1,
+      },
+      createOrderDto.shippingAddress,
+    );
 
     const orderItems = this.defineOrderItems(items, products);
     const totalAmount = this.calculateTotalAmount(orderItems);
