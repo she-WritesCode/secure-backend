@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { useCartStore, useProductStore } from "../stores";
+import { useCartStore, type Product, useProductStore } from "../stores";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -24,6 +24,10 @@ const cartStore = useCartStore();
 const productStore = useProductStore();
 const { product, getOneProduct, error, loading } = productStore;
 
+// const product = ref<Product | undefined>(undefined);
+// const loading = ref(false);
+// const error = ref("");
+
 const formSchema = z.object({
   quantity: z
     .number()
@@ -39,7 +43,7 @@ const form = useForm({
 });
 
 onMounted(async () => {
-  getOneProduct(route.params.id as string);
+  await getOneProduct(route.params.id as string);
 });
 
 const addToCart = form.handleSubmit((values) => {
@@ -61,6 +65,7 @@ const goToCheckout = () => {
 <template>
   <main class="container mx-auto py-8 px-4">
     <div v-if="loading" class="flex justify-center items-center min-h-[400px]">
+      Loading...
       <div
         class="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"
       ></div>
@@ -74,9 +79,9 @@ const goToCheckout = () => {
       <Card class="flex flex-col md:flex-row gap-8">
         <div class="md:w-1/2">
           <img
-            :src="product.image"
+            :src="product.imageUrl"
             :alt="product.name"
-            class="w-full h-96 object-cover rounded-lg"
+            class="w-full h-[42em] object-cover rounded-lg"
           />
         </div>
 

@@ -1,26 +1,35 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
 import { useProductStore } from "../stores";
-import { Button } from "../components/ui/button";
 import {
   Card,
   CardHeader,
   CardTitle,
   CardDescription,
   CardContent,
-  CardFooter,
-} from "../components/ui/card";
-import { Pagination } from "../components/ui/pagination";
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import {
+  Pagination,
+  PaginationEllipsis,
+  PaginationFirst,
+  PaginationLast,
+  PaginationList,
+  PaginationListItem,
+  PaginationNext,
+  PaginationPrev,
+} from "@/components/ui/pagination";
 
-const productStore = useProductStore();
-const { products, loading, currentPage, totalPages } = productStore;
+const { products, loading, currentPage, totalPages, fetchProducts } =
+  useProductStore();
+// const { products, loading, currentPage, totalPages } = productStore;
 
-onMounted(() => {
-  productStore.fetchProducts();
+onMounted(async () => {
+  await fetchProducts();
 });
 
-const handlePageChange = (page: number) => {
-  productStore.fetchProducts(page);
+const handlePageChange = async (page: number) => {
+  await fetchProducts(page);
 };
 </script>
 
@@ -29,6 +38,7 @@ const handlePageChange = (page: number) => {
     <h1 class="text-3xl font-bold mb-8">Products</h1>
 
     <div v-if="loading" class="flex justify-center items-center min-h-[400px]">
+      Loading...
       <div
         class="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"
       ></div>
@@ -38,41 +48,75 @@ const handlePageChange = (page: number) => {
       v-else
       class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
     >
-      <Card v-for="product in products" :key="product.id" class="flex flex-col">
-        <CardHeader class="p-0">
+      <Card
+        v-for="product in products"
+        :key="product._id"
+        class="flex flex-row"
+      >
+        <CardHeader class="p-0 w-1/3">
           <img
-            :src="product.image"
+            :src="product.imageUrl"
             :alt="product.name"
-            class="w-full h-48 object-cover rounded-t-lg"
+            class="w-full h-full object-cover rounded-t-lg"
+            @click="$router.push(`/product/${product._id}`)"
           />
-          <CardTitle class="mt-4 px-6">{{ product.name }}</CardTitle>
-          <CardDescription class="px-6"
+        </CardHeader>
+        <CardContent class="w-2/3">
+          <CardTitle
+            class="mt-4 text-2xl"
+            @click="$router.push(`/product/${product._id}`)"
+            >{{ product.name }}</CardTitle
+          >
+          <CardDescription
+            class="text-lg text-indigo-600"
+            @click="$router.push(`/product/${product._id}`)"
             >${{ product.price.toFixed(2) }}</CardDescription
           >
-        </CardHeader>
-
-        <CardContent class="flex-grow">
           <p class="text-gray-600">{{ product.description }}</p>
         </CardContent>
-
-        <CardFooter class="flex justify-between">
-          <Button
-            variant="outline"
-            @click="$router.push(`/product/${product.id}`)"
-          >
-            View Details
-          </Button>
-        </CardFooter>
       </Card>
     </div>
 
     <div class="mt-8 flex justify-center">
       <Pagination
         v-if="totalPages > 1"
+        :itemsPerPage="10"
         :total-pages="totalPages"
-        :current-page="currentPage"
-        @page-change="handlePageChange"
-      />
+        v-slot="{ page }"
+        :total="20"
+        :default-page="1"
+        :show-edges="false"
+      >
+        <PaginationList v-slot="{ items }" class="flex items-center gap-1">
+          <PaginationFirst @click="handlePageChange(1)" />
+          <PaginationPrev
+            @click="handlePageChange(Math.max(1, currentPage - 1))"
+          />
+
+          <template v-for="(item, index) in items">
+            <PaginationListItem
+              v-if="item.type === 'page'"
+              :key="index"
+              :value="item.value"
+              as-child
+            >
+              <Button
+                @click="handlePageChange(item.value)"
+                class="w-9 h-9 p-0"
+                :variant="item.value === page ? 'default' : 'outline'"
+              >
+                {{ item.value }}
+              </Button>
+            </PaginationListItem>
+            <PaginationEllipsis v-else :key="item.type" :index="index" />
+          </template>
+
+          <PaginationNext
+            @click="handlePageChange(Math.min(totalPages, currentPage + 1))"
+          />
+          <PaginationLast @click="handlePageChange(totalPages)" />
+        </PaginationList>
+      </Pagination>
     </div>
   </main>
 </template>

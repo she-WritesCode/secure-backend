@@ -38,4 +38,3 @@ export class Product extends AbstractDocument {
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);
-ProductSchema.index({ email: 1 }, { unique: true });

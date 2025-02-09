@@ -1,18 +1,18 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { computed, ref, shallowRef } from "vue";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 export interface Product {
-  id: string;
+  _id: string;
   name: string;
   description: string;
   price: number;
-  image: string;
+  imageUrl: string;
 }
 
 export const useProductStore = defineStore("products", () => {
-  const products = ref<Product[]>([]);
+  const products = shallowRef<Product[]>([]);
   const product = ref<Product | null>(products.value[0]);
   const loading = ref(false);
   const error = ref<string | null>(null);
@@ -22,7 +22,9 @@ export const useProductStore = defineStore("products", () => {
   const fetchProducts = async (page = 1) => {
     loading.value = true;
     try {
-      const response = await fetch(`${BACKEND_URL}/products?page=${page}`);
+      const response = await fetch(
+        `${BACKEND_URL}/products?page=${page}&limit=10`
+      );
       const data = await response.json();
       products.value = data.results;
       currentPage.value = data.pagination.page;
@@ -33,11 +35,13 @@ export const useProductStore = defineStore("products", () => {
       loading.value = false;
     }
   };
-  const getOneProduct = async (id: string) => {
+
+  const getOneProduct = async (id: string): Promise<Product | undefined> => {
     loading.value = true;
     try {
-      const response = await fetch(`/products/${id}`);
+      const response = await fetch(`${BACKEND_URL}/products/${id}`);
       product.value = await response.json();
+      return product.value ?? undefined;
     } catch (err) {
       error.value = "Failed to fetch product";
     } finally {
@@ -46,8 +50,8 @@ export const useProductStore = defineStore("products", () => {
   };
 
   return {
-    product,
-    products,
+    product: computed(() => product.value),
+    products: computed(() => products.value),
     loading,
     error,
     currentPage,

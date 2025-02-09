@@ -24,4 +24,8 @@ export class ProductRepository extends AbstractRepository<Product> {
   ];
   protected excludedFields: string[] = [];
   protected populateOnFind: string[] = [];
+
+  count() {
+    return this.model.countDocuments();
+  }
 }

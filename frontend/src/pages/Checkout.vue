@@ -69,7 +69,7 @@ const onSubmit = form.handleSubmit(async (values) => {
             <div class="space-y-4">
               <div
                 v-for="item in cartStore.items"
-                :key="item.id"
+                :key="item._id"
                 class="flex justify-between items-center"
               >
                 <div>
@@ -83,7 +83,7 @@ const onSubmit = form.handleSubmit(async (values) => {
                     ${{ (item.price * item.quantity).toFixed(2) }}
                   </p>
                   <Button
-                    @click="cartStore.removeFromCart(item.id)"
+                    @click="cartStore.removeFromCart(item._id)"
                     variant="secondary"
                     >x</Button
                   >

@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductRepository } from './product.repository';
+import { seedProducts } from './seeds/product.seed';
 
 @Injectable()
 export class ProductService {
@@ -12,9 +13,13 @@ export class ProductService {
   }
 
   async findAllPublished(query: Record<string, any> = {}) {
+    seedProducts(this.productRepository);
+    const { page, limit, ...filter } = query;
     return this.productRepository.paginate({
       defaultFilter: { isActive: true },
-      filter: query,
+      filter,
+      page,
+      limit,
       sort: { name: 1 },
     });
   }

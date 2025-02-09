@@ -50,12 +50,12 @@ const goToCheckout = () => {
           <div class="space-y-4">
             <div
               v-for="item in cartStore.items"
-              :key="item.id"
+              :key="item._id"
               class="flex items-center justify-between py-4 border-b last:border-0"
             >
               <div class="flex items-center space-x-4">
                 <img
-                  :src="item.image"
+                  :src="item.imageUrl"
                   :alt="item.name"
                   class="w-16 h-16 object-cover rounded"
                 />
@@ -71,7 +71,7 @@ const goToCheckout = () => {
                   <Button
                     variant="outline"
                     size="icon"
-                    @click="updateQuantity(item.id, item.quantity - 1)"
+                    @click="updateQuantity(item._id, item.quantity - 1)"
                   >
                     -
                   </Button>
@@ -81,13 +81,13 @@ const goToCheckout = () => {
                     class="w-16 text-center"
                     min="1"
                     @change="
-                      (e) => updateQuantity(item.id, parseInt(e.target.value))
+                      (e) => updateQuantity(item._id, parseInt(e.target.value))
                     "
                   />
                   <Button
                     variant="outline"
                     size="icon"
-                    @click="updateQuantity(item.id, item.quantity + 1)"
+                    @click="updateQuantity(item._id, item.quantity + 1)"
                   >
                     +
                   </Button>
@@ -99,7 +99,7 @@ const goToCheckout = () => {
                   <Button
                     variant="destructive"
                     size="sm"
-                    @click="removeItem(item.id)"
+                    @click="removeItem(item._id)"
                   >
                     Remove
                   </Button>

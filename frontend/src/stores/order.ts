@@ -27,7 +27,7 @@ export const useOrderStore = defineStore("orders", () => {
   const fetchOrders = async () => {
     loading.value = true;
     try {
-      const response = await fetch("/api/orders");
+      const response = await fetch("/orders");
       const data = await response.json();
       orders.value = data.results;
     } catch (err) {
@@ -43,7 +43,7 @@ export const useOrderStore = defineStore("orders", () => {
   ) => {
     loading.value = true;
     try {
-      const response = await fetch("/api/orders", {
+      const response = await fetch("/orders", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
